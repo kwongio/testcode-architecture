@@ -2,15 +2,19 @@ package com.example.demo.user.service;
 
 import com.example.demo.common.domain.exception.CertificationCodeNotMatchedException;
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
-import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.domain.UserCreate;
+import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.domain.UserUpdate;
 import com.example.demo.user.infrastructure.UserEntity;
-import com.example.demo.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
@@ -29,8 +33,9 @@ class UserServiceTest {
 
     @Autowired
     private UserService userService;
-//    @MockBean
-//    private JavaMailSender mailSender;
+    @MockBean
+    private JavaMailSender javaMailSender;
+
 
 
     @DisplayName("getByEmail은 ACTIVE 상태인 유저를 찾아올 수 있다.")
@@ -69,10 +74,11 @@ class UserServiceTest {
     @Test
     void test5() {
         UserCreate userCreateDto = UserCreate.builder()
-                .email("kwon@kakao.com")
+                .email("rldh9037@naver.com")
                 .nickname("kwon3")
                 .address("Seoul")
                 .build();
+        BDDMockito.doNothing().when(javaMailSender).send(ArgumentMatchers.any(SimpleMailMessage.class));
         UserEntity result = userService.create(userCreateDto);
 
         assertThat(result.getId()).isNotNull();

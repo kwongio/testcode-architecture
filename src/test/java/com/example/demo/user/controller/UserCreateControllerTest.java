@@ -5,10 +5,15 @@ import com.example.demo.user.infrastructure.UserJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,6 +33,8 @@ class UserCreateControllerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private UserJpaRepository userRepository;
+    @MockBean
+    private JavaMailSender javaMailSender;
 
 
     @DisplayName("UserCreateDto로 유저를 생성할 수 있고 회원가입된 사용자는 PENDING 상태이다.")
@@ -38,6 +45,7 @@ class UserCreateControllerTest {
                 .email("gio1234@naver.com")
                 .nickname("g")
                 .build();
+        BDDMockito.doNothing().when(javaMailSender).send(ArgumentMatchers.any(SimpleMailMessage.class));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/users")
                         .content(objectMapper.writeValueAsString(userCreateDto))

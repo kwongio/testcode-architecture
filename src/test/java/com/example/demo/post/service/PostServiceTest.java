@@ -4,11 +4,12 @@ import com.example.demo.common.domain.exception.ResourceNotFoundException;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
 import com.example.demo.post.infrastructure.PostEntity;
-import com.example.demo.post.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 
@@ -27,6 +28,9 @@ class PostServiceTest {
 
     @Autowired
     private PostService postService;
+
+    @MockBean
+    private JavaMailSender javaMailSender;
 
     @DisplayName("getById로 존재하는 게시물을 내려준다.")
     @Test
@@ -51,7 +55,7 @@ class PostServiceTest {
 
     @DisplayName("PostCreateDto로 post를 생성할 수 있다.")
     @Test
-    public void create() {
+    public void  create() {
         //given
         PostCreate postCreateDto = PostCreate.builder()
                 .writerId(1L)

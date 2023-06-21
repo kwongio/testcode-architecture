@@ -19,7 +19,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
-//    private final JavaMailSender mailSender;
+    private final CertificationService certificationService;
 
 
     public UserEntity getByEmail(String email) {
@@ -41,8 +41,7 @@ public class UserService {
         userEntity.setStatus(UserStatus.PENDING);
         userEntity.setCertificationCode(UUID.randomUUID().toString());
         userEntity = userRepository.save(userEntity);
-//        String certificationUrl = generateCertificationUrl(userEntity);
-//        sendCertificationEmail(userCreateDto.getEmail(), certificationUrl);
+        certificationService.send(userEntity.getEmail(), userEntity.getId(), userEntity.getCertificationCode());
         return userEntity;
     }
 
