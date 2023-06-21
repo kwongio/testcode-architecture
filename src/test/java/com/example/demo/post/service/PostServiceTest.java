@@ -3,7 +3,7 @@ package com.example.demo.post.service;
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
-import com.example.demo.post.infrastructure.PostEntity;
+import com.example.demo.post.domain.Post;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ class PostServiceTest {
     public void test1() {
         //given
         //when
-        PostEntity result = postService.getById(1L);
+        Post result = postService.getById(1L);
         //then
         assertThat(result.getContent()).isEqualTo("content");
         assertThat(result.getWriter().getEmail()).isEqualTo("kwon@naver.com");
@@ -62,7 +62,7 @@ class PostServiceTest {
                 .content("hi")
                 .build();
         //when
-        PostEntity result = postService.create(postCreateDto);
+        Post result = postService.create(postCreateDto);
         //then
         assertThat(result.getContent()).isEqualTo("hi");
         assertThat(result.getWriter().getEmail()).isEqualTo("kwon@naver.com");
@@ -76,7 +76,7 @@ class PostServiceTest {
                 .content("hi")
                 .build();
         //when
-        PostEntity result = postService.update(1L, postUpdateDto);
+        Post result = postService.update(1L, postUpdateDto);
         //then
         assertThat(result.getContent()).isEqualTo("hi");
         assertThat(result.getWriter().getEmail()).isEqualTo("kwon@naver.com");
