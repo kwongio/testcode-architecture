@@ -1,5 +1,6 @@
 package com.example.demo.post.domain;
 
+import com.example.demo.mock.FakeClockHolder;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +30,7 @@ class PostTest {
                 .certificationCode(UUID.randomUUID().toString())
                 .build();
         //when
-        Post post = Post.from(postCreate, writer);
+        Post post = Post.from(postCreate, writer, new FakeClockHolder(100L));
 
 
         //then
@@ -39,9 +40,9 @@ class PostTest {
         assertThat(post.getWriter().getStatus()).isEqualTo(UserStatus.ACTIVE);
         assertThat(post.getWriter().getAddress()).isEqualTo("Seoul");
         assertThat(post.getWriter().getNickname()).isEqualTo("gio");
+        assertThat(post.getCreatedAt()).isEqualTo(100L);
 
     }
-
 
 
 }

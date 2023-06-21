@@ -24,7 +24,19 @@ public class UserStub {
 
     public static User pending() {
         return User.builder()
-                .id(1L)
+                .id(2L)
+                .email("rldh90372@naver.com")
+                .nickname("gio")
+                .address("Seoul")
+                .status(UserStatus.PENDING)
+                .certificationCode("aaaa-bbbb-cccc")
+                .lastLoginAt(0L)
+                .build();
+    }
+
+    public static User create(Long id) {
+        return User.builder()
+                .id(id)
                 .email("rldh9037@naver.com")
                 .nickname("gio")
                 .address("Seoul")

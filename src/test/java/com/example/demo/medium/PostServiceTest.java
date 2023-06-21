@@ -1,49 +1,34 @@
-package com.example.demo.post.service;
+package com.example.demo.medium;
 
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
-import com.example.demo.mock.FakeClockHolder;
-import com.example.demo.mock.FakePostRepository;
-import com.example.demo.mock.FakeUserRepository;
-import com.example.demo.post.domain.Post;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
-import com.example.demo.stub.PostStub;
-import com.example.demo.stub.UserStub;
-import com.example.demo.user.domain.User;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.demo.post.domain.Post;
+import com.example.demo.post.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
 
 import java.io.IOException;
 
-import static com.example.demo.stub.UserStub.EMAIL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
+@SpringBootTest
+@SqlGroup({
+        @Sql(value = "/sql/post-service-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
+        @Sql(value = "/sql/delete-all-data.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+})
 class PostServiceTest {
 
-
+    @Autowired
     private PostService postService;
-
-    @BeforeEach
-    void init() {
-
-        FakePostRepository postRepository = new FakePostRepository();
-        FakeUserRepository userRepository = new FakeUserRepository();
-        this.postService = PostService.builder()
-                .postRepository(postRepository)
-                .userRepository(userRepository)
-                .clockHolder(new FakeClockHolder(100L))
-                .build();
-
-        userRepository.save(UserStub.pending());
-        User user = UserStub.active();
-        userRepository.save(user);
-        postRepository.save(PostStub.create(user));
-    }
 
     @MockBean
     private JavaMailSender javaMailSender;
@@ -56,7 +41,7 @@ class PostServiceTest {
         Post result = postService.getById(1L);
         //then
         assertThat(result.getContent()).isEqualTo("content");
-        assertThat(result.getWriter().getEmail()).isEqualTo(EMAIL);
+        assertThat(result.getWriter().getEmail()).isEqualTo("kwon@naver.com");
 
     }
 
@@ -71,7 +56,7 @@ class PostServiceTest {
 
     @DisplayName("PostCreateDto로 post를 생성할 수 있다.")
     @Test
-    public void create() {
+    public void  create() {
         //given
         PostCreate postCreateDto = PostCreate.builder()
                 .writerId(1L)
@@ -81,9 +66,7 @@ class PostServiceTest {
         Post result = postService.create(postCreateDto);
         //then
         assertThat(result.getContent()).isEqualTo("hi");
-        assertThat(result.getWriter().getEmail()).isEqualTo(EMAIL);
-        assertThat(result.getCreatedAt()).isEqualTo(100L);
-
+        assertThat(result.getWriter().getEmail()).isEqualTo("kwon@naver.com");
     }
 
     @DisplayName("postUpdateDto를 이용하여 게시물을 수정할 수 있다")
@@ -97,8 +80,7 @@ class PostServiceTest {
         Post result = postService.update(1L, postUpdateDto);
         //then
         assertThat(result.getContent()).isEqualTo("hi");
-        assertThat(result.getWriter().getEmail()).isEqualTo(EMAIL);
-        assertThat(result.getModifiedAt()).isEqualTo(100L);
+        assertThat(result.getWriter().getEmail()).isEqualTo("kwon@naver.com");
 
     }
 

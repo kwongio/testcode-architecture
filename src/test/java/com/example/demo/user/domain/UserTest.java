@@ -107,7 +107,7 @@ class UserTest {
         //then
         Assertions.assertThat(user.getNickname()).isEqualTo(NICKNAME);
         Assertions.assertThat(user.getAddress()).isEqualTo(ADDRESS);
-        Assertions.assertThat(user.getEmail()).isEqualTo(EMAIL);
+        Assertions.assertThat(user.getEmail()).isEqualTo("rldh90372@naver.com");
         Assertions.assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
         Assertions.assertThat(user.getCertificationCode()).isEqualTo("aaaa-bbbb-cccc");
         Assertions.assertThat(user.getLastLoginAt()).isEqualTo(0);
