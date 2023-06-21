@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 })
 class UserJpaRepositoryTest {
 
+
     @Autowired
     private UserJpaRepository userRepository;
 
